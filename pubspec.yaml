@@ -1,0 +1,36 @@
+name: fleetdownloader
+description: Twitter fleet downloader for android/iOS
+version: 1.0.0+2
+
+environment:
+  sdk: ">=2.7.2 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  path_provider: ^1.6.24
+  provider: ^4.3.2+2
+  permission_handler: ^5.0.1+1
+  url_launcher: ^5.7.8
+  shared_preferences: ^0.5.12+4
+  admob_flutter: ^1.0.1
+
+dev_dependencies:
+  test: ^1.15.4
+  mockito: ^4.1.3
+  flutter_test:
+    sdk: flutter
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/res/
+    - assets/res/icons/
+
+  fonts:
+    - family: Cantarell-Regular
+      fonts:
+        - asset: assets/fonts/Cantarell-Regular.ttf
+    - family: Chococooky
+      fonts:
+        - asset: assets/fonts/Chococooky.ttf
