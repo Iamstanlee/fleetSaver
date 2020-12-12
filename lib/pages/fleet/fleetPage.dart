@@ -14,12 +14,19 @@ class FleetPage extends StatefulWidget {
   _FleetPageState createState() => _FleetPageState();
 }
 
-class _FleetPageState extends State<FleetPage> {
-  int index;
+class _FleetPageState extends State<FleetPage>
+    with SingleTickerProviderStateMixin<FleetPage> {
+  TabController tabController;
   @override
   void initState() {
     super.initState();
-    index = widget.fleetIndex;
+    tabController = TabController(
+        initialIndex: widget.fleetIndex,
+        length: widget.fleets.length,
+        vsync: this);
+    tabController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -33,22 +40,13 @@ class _FleetPageState extends State<FleetPage> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Hero(
-              tag: ObjectKey(fleets[index].reference),
-              child: GestureDetector(
-                  onHorizontalDragEnd: (drag) {
-                    if (drag.primaryVelocity > 0) {
-                      setState(() {
-                        if (index != 0) index--;
-                      });
-                    } else if (drag.primaryVelocity < 0) {
-                      setState(() {
-                        if (index != fleets.length) index++;
-                      });
-                    }
-                  },
-                  child: InteractiveViewer(
-                      child: Image.file(fleets[index].file)))),
+          TabBarView(
+              controller: tabController,
+              children: fleets.map((fleet) {
+                return Hero(
+                    tag: ObjectKey(fleet.reference),
+                    child: InteractiveViewer(child: Image.file(fleet.file)));
+              }).toList()),
           Positioned(
               top: 42,
               left: 22,
@@ -63,7 +61,7 @@ class _FleetPageState extends State<FleetPage> {
                             : Colors.black)),
                 Padding(
                   padding: EdgeInsets.only(left: 12),
-                  child: Text("${fleets[index].reference}",
+                  child: Text("${fleets[tabController.index].reference}",
                       style: appBloc.darkMode
                           ? textStyleDark.copyWith(
                               fontSize: 18, color: Colors.grey)
@@ -75,7 +73,7 @@ class _FleetPageState extends State<FleetPage> {
             right: 27,
             child: InkWell(
                 onTap: () {
-                  fleetBloc.saveFleet(context, fleets[index]);
+                  fleetBloc.saveFleet(context, fleets[tabController.index]);
                 },
                 child: imageIcon('icon-download', color: Colors.grey)),
           )
